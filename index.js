@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const cors = require('cors');
 require('dotenv').config()
@@ -26,35 +26,36 @@ async function run() {
 
         const instructorsCollection = client.db("musicCamp").collection("instructors");
         const classesCollection = client.db("musicCamp").collection("classes");
+        const selectedCollection = client.db("musicCamp").collection("selected");
 
         app.get('/instructor', async (req, res) => {
             const result = await instructorsCollection.find().toArray();
             res.send(result);
-            console.log(result);
         })
 
         app.get('/class', async (req, res) => {
             const result = await classesCollection.find().toArray();
             res.send(result);
-            console.log(result);
         })
 
-        app.get('/class/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            console.log(query);
-
-            const options = {
-                projection: {
-                    email: 1,
-                    name: 1,
-                    musicClasses: 1,
-                    image: 1,
-                    price: 1,
-                }
-            }
-            const result = await classesCollection.find(query, options).toArray();
+        app.get("/select", async (req, res) => {
+            const result = await selectedCollection.find().toArray();
             res.send(result);
+        })
+
+        app.post('/select', async (req, res) => {
+            const requestData = req.body;
+            console.log(requestData);
+            const result = await selectedCollection.insertOne(requestData);
+            res.send(result)
+        })
+
+        app.delete('/select/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            console.log(query);
+            const result = await selectedCollection.deleteOne(query);
+            res.send(result)
         })
 
         await client.db("admin").command({ ping: 1 });
