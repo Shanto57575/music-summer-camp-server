@@ -41,9 +41,19 @@ async function run() {
 
         app.get('/class/:email', async (req, res) => {
             const email = req.params.email;
-
             const query = { email: email };
-            const result = await classesCollection.find(query).toArray();
+            console.log(query);
+
+            const options = {
+                projection: {
+                    email: 1,
+                    name: 1,
+                    musicClasses: 1,
+                    image: 1,
+                    price: 1,
+                }
+            }
+            const result = await classesCollection.find(query, options).toArray();
             res.send(result);
         })
 
