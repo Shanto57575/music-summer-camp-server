@@ -28,6 +28,7 @@ async function run() {
         const classesCollection = client.db("musicCamp").collection("classes");
         const selectedCollection = client.db("musicCamp").collection("selected");
 
+
         app.get('/instructor', async (req, res) => {
             const result = await instructorsCollection.find().toArray();
             res.send(result);
@@ -52,8 +53,9 @@ async function run() {
 
         app.delete('/select/:id', async (req, res) => {
             const id = req.params.id;
+            console.log(id);
             const query = { _id: new ObjectId(id) }
-            console.log(query);
+            console.log("query", query);
             const result = await selectedCollection.deleteOne(query);
             res.send(result)
         })
