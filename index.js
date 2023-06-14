@@ -41,6 +41,13 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/select/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await selectedCollection.find(query).toArray();
+            res.send(result);
+        })
+
         app.post('/select', async (req, res) => {
             const requestData = req.body;
             console.log(requestData);
@@ -54,7 +61,7 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             console.log("query", query);
             const result = await selectedCollection.deleteOne(query);
-            res.send(result)
+            res.send(result);
         })
 
         await client.db("admin").command({ ping: 1 });
