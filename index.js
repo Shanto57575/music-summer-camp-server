@@ -26,7 +26,6 @@ async function run() {
         const classesCollection = client.db("musicCamp").collection("classes");
         const selectedCollection = client.db("musicCamp").collection("selected");
 
-
         app.get('/instructor', async (req, res) => {
             const result = await instructorsCollection.find().toArray();
             res.send(result);
